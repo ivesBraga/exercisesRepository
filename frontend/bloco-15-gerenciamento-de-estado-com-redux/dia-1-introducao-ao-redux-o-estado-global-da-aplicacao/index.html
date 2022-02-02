@@ -35,32 +35,64 @@
     <script>
       const nextButton = document.querySelector("#next")
       const previousButton = document.querySelector("#previous")
+      const color = document.querySelector("#value")
+      const containerColor = document.querySelector("#container")
 
       const ESTADO_INICIAL = {
         colors: ['white', 'black', 'red', 'green', 'blue', 'yellow'],
         index: 0,
       };
 
-      const store = Redux.createStore(reducer);
+      
 
       const reducer =  (state = ESTADO_INICIAL, action) => {
         switch (action.type) {
-          case NEXT_COLOR:
+          case "NEXT_COLOR":
             return { 
               ...state,
-              index: state.index >= 5 ? '' : +1
+              index: state.index < 5 ? state.index + 1 : state.index = 0
              };
-          case PREVIOUS_COLOR:
+          case "PREVIOUS_COLOR":
             return {
               ...state,
-              index: state.index < 0 ? '' : -1
+              index: state.index > 0 ? state.index - 1 : state.index = 5
             }
-
         default:
       return state;
   }
 };
-      
+
+const store = Redux.createStore(reducer);
+
+store.subscribe(() => {
+  const state = store.getState();
+  const { colors, index } = state
+  console.log(state);
+
+  color.innerHTML = colors[index]
+  containerColor.style.backgroundColor = colors[index]
+})
+
+function nextColorButton() {
+  return {
+    type: "NEXT_COLOR",
+  }
+}
+
+function previousColorButton() {
+  return {
+    type: "PREVIOUS_COLOR"
+  }
+}
+
+  nextButton.addEventListener('click', () => {
+    store.dispatch(nextColorButton())
+  })
+
+  previousButton.addEventListener('click', () => {
+    store.dispatch(previousColorButton())
+  })
+
     </script>
   </body>
 </html>
